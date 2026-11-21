@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Hub · My Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#1b2540;--muted:#66708a;--line:#dde2ee;--accent:#3d5afe;--mark:#ffe45c;--late:#d6336c;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12162a;--card:#1b2140;--ink:#eef1fb;--muted:#9aa5c4;--line:#2c345a;--accent:#8c9eff;--late:#ff6b9a}}
+:root[data-theme="dark"]{--bg:#12162a;--card:#1b2140;--ink:#eef1fb;--muted:#9aa5c4;--line:#2c345a;--accent:#8c9eff;--late:#ff6b9a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;border-radius:8px;padding:.5rem .9rem;font-weight:500}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding:1.5rem 1rem 7rem}
+.muted{color:var(--muted);margin:.2rem 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+h1{font-size:clamp(1.9rem,6vw,2.8rem);line-height:1.1;letter-spacing:-.03em;margin:.2rem 0 .4rem}
+.link{background:none;padding:0;color:var(--accent);font:inherit;font-weight:700;text-decoration:underline dotted}
+.brand{font-weight:700;color:var(--accent);margin-bottom:1rem;letter-spacing:-.01em}
+.tiles{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap}
+.tiles div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.5rem .9rem;min-width:88px}
+.tiles b{display:block;font-size:1.4rem;line-height:1.2}.tiles span{color:var(--muted);font-size:.8rem}
+.ring{position:relative;width:84px;height:84px;flex-shrink:0}
+.ring svg{width:100%;height:100%}
+.trk,.arc{fill:none;stroke-width:7}.trk{stroke:var(--line)}
+.arc{stroke:var(--accent);stroke-linecap:round;stroke-dasharray:163.4;stroke-dashoffset:163.4;transition:stroke-dashoffset .5s}
+#pct{position:absolute;inset:0;display:grid;place-items:center;font-weight:700}
+
+.weekbar{display:flex;align-items:center;gap:.5rem;margin:1.4rem 0 .6rem}
+#wkLbl{flex:1;font-weight:700}
+.nav{background:var(--card);border:1px solid var(--line);width:2.2rem;padding:.3rem 0;font-size:1.2rem;line-height:1}
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:0 0 1.2rem}
+.strip button{background:var(--card);border:1px solid var(--line);display:grid;gap:0;justify-items:center;padding:.55rem 0;line-height:1.25}
+.strip small{color:var(--muted);font-size:.72rem}.strip b{font-size:1.15rem}
+.strip .on{background:var(--ink);color:var(--bg)}.strip .on small{color:var(--bg)}
+.strip .tdy{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.strip i{font-style:normal;font-size:.7rem;color:var(--muted);min-height:1.1em}.strip .on i{color:var(--bg)}
+
+.add{display:flex;flex-wrap:wrap;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px}
+.add input{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem;min-width:0}
+#title{flex:1 1 220px}#time{flex:0 0 112px}#tag{flex:0 1 130px}#dur{flex:0 0 84px}
+.dchip{background:none;padding:0;color:var(--muted);font-weight:400;font-size:.8rem;text-decoration:underline dotted;text-align:left;justify-self:start}
+.add .go{background:var(--accent);color:#fff;font-weight:700}
+
+.band{margin-top:1.6rem;border-left:3px solid var(--line);padding-left:1rem}
+.band.now{border-left-color:var(--accent)}
+.band h3{margin:0 0 .6rem;font-size:1.3rem;display:flex;align-items:baseline;gap:.6rem}
+.band h3 small{color:var(--muted);font-size:.8rem;font-weight:400}
+.band h3 em{font-style:normal;background:var(--accent);color:#fff;font-size:.72rem;padding:.05rem .5rem;border-radius:99px}
+.band ul{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.empty{color:var(--muted);margin:.2rem 0}
+.task{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-left:4px solid hsl(var(--h) 70% 55%);border-radius:12px;padding:.7rem .9rem}
+.time{font-weight:700;font-variant-numeric:tabular-nums;min-width:3.2rem}.time.late{color:var(--late)}
+.info{flex:1 1 160px;display:grid;gap:.15rem}
+.ttl{font-weight:500}
+.tag{font-size:.8rem;color:var(--muted)}
+.tag::before{content:"";display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:hsl(var(--h) 70% 55%);margin-right:.4rem}
+.acts{display:flex;gap:.4rem;align-items:center}
+.ghost{background:transparent;border:1px solid var(--line)}
+.mark{background:var(--accent);color:#fff}
+.x{background:none;color:var(--muted);font-weight:400;font-size:.85rem}
+.stamp{background:var(--mark);color:#1b2540;font-weight:700;transform:rotate(-3deg);padding:.4rem 1rem}
+.task.done{background:transparent}
+.task.done .ttl{text-decoration:line-through;color:var(--muted)}
+.task.pop .stamp{animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(1.8) rotate(-14deg);opacity:0}to{transform:scale(1) rotate(-3deg);opacity:1}}
+
+.fbar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:1rem;justify-content:center;background:var(--ink);color:var(--bg);padding:.8rem 1rem calc(.8rem + env(safe-area-inset-bottom,0px))}
+.fbar[hidden]{display:none}
+#fclock{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums}
+#ftitle{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:40vw}
+.fbar button{background:var(--mark);color:#1b2540;font-weight:700}
+.fbar .end{background:transparent;color:var(--bg);border:1px solid var(--bg)}
+#toast{position:fixed;left:50%;bottom:5.5rem;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:.5rem 1rem;border-radius:99px;opacity:0;pointer-events:none;transition:.25s}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">🎓 Student Hub</div>
+  <header class="top">
+    <div>
+      <p class="muted" id="dateLbl"></p>
+      <h1 id="hello"></h1>
+      <p class="muted" id="sub"></p>
+      <div class="tiles" id="tiles"></div>
+    </div>
+    <div class="ring" aria-label="Day progress">
+      <svg viewBox="0 0 64 64"><circle class="trk" cx="32" cy="32" r="26"/><circle class="arc" id="arc" cx="32" cy="32" r="26" transform="rotate(-90 32 32)"/></svg>
+      <span id="pct">0%</span>
+    </div>
+  </header>
+
+  <div class="weekbar">
+    <button class="nav" data-act="wk" data-n="-1" aria-label="Previous week">‹</button>
+    <span id="wkLbl"></span>
+    <button class="nav" data-act="wk" data-n="1" aria-label="Next week">›</button>
+    <button class="ghost" data-act="today">Today</button>
+    <button class="ghost" data-act="theme" id="themeBtn">Dark mode</button>
+  </div>
+  <nav class="strip" id="strip" aria-label="Choose a day"></nav>
+
+  <form class="add" id="form">
+    <input id="title" placeholder="What will you do?" maxlength="80" required aria-label="Task title">
+    <input id="time" type="time" required aria-label="Time">
+    <input id="tag" list="tags" placeholder="Subject" maxlength="20" aria-label="Subject">
+    <input id="dur" type="number" min="1" max="240" value="25" title="Focus time in minutes" aria-label="Focus time in minutes">
+    <datalist id="tags"></datalist>
+    <button class="go">Add task</button>
+  </form>
+
+  <div id="bands"></div>
+</div>
+
+<div class="fbar" id="fbar" hidden>
+  <span id="ftitle"></span><span id="fclock">25:00</span>
+  <button id="fpause" data-act="pause">Pause</button>
+  <button class="end" data-act="stop">End session</button>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+const KEY="studentHub.planner.v1",TITLE="Student Hub · My Day",$=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,"0"),ymd=d=>d.toLocaleDateString("en-CA"),todayStr=()=>ymd(new Date());
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const esc=t=>t.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const hue=s=>[...s].reduce((a,c)=>a+c.charCodeAt(0)*13,0)%360;
+const BANDS=[{n:"Morning",r:"05:00–12:00"},{n:"Afternoon",r:"12:00–17:00"},{n:"Evening",r:"17:00–05:00"}];
+const bandOf=h=>h>=5&&h<12?0:h>=12&&h<17?1:2;
+
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.tasks)return s}catch(e){}
+  const t=todayStr();
+  return{name:"Student",focus:{},tasks:[
+    {id:uid(),date:t,time:"09:00",title:"Review lecture notes",tag:"Study",done:false},
+    {id:uid(),date:t,time:"14:00",title:"Finish assignment draft",tag:"Assignment",done:false},
+    {id:uid(),date:t,time:"19:30",title:"Practice 10 quiz questions",tag:"Quiz",done:false}]};
+}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let S=load(),sel=todayStr(),F=null,popId=null,tt,lastTime=pad((new Date().getHours()+1)%24)+":00";
+
+const taskHtml=(t,late)=>`<li class="task${t.done?" done":""}${t.id===popId?" pop":""}" style="--h:${hue(t.tag||"x")}">
+  <span class="time${late?" late":""}">${t.time}</span>
+  <div class="info"><span class="ttl">${esc(t.title)}</span>${t.tag?`<span class="tag" style="--h:${hue(t.tag)}">${esc(t.tag)}</span>`:""}<button class="dchip" data-act="dur" data-id="${t.id}" title="Change focus time">${t.dur||25} min focus</button></div>
+  <div class="acts">${t.done
+    ?`<button class="stamp" data-act="done" data-id="${t.id}" title="Click to undo">Done</button>`
+    :`<button class="ghost" data-act="focus" data-id="${t.id}">Start focus</button><button class="mark" data-act="done" data-id="${t.id}">Mark done</button>`}
+    <button class="x" data-act="del" data-id="${t.id}" aria-label="Delete task">Delete</button></div></li>`;
+
+function render(){
+  const now=new Date(),td=todayStr(),isToday=sel===td,h=now.getHours(),nowT=pad(h)+":"+pad(now.getMinutes());
+  const day=S.tasks.filter(t=>t.date===sel).sort((a,b)=>a.time.localeCompare(b.time));
+  const done=day.filter(t=>t.done).length,pct=day.length?Math.round(done/day.length*100):0,next=day.find(t=>!t.done);
+  const g=h<12?"Good morning":h<18?"Good afternoon":"Good evening";
+
+  applyTheme();$("#hello").innerHTML=g+", <button class=\"link\" data-act=\"name\">"+esc(S.name)+"</button>";
+  $("#dateLbl").textContent=(isToday?"Today, ":"")+new Date(sel+"T12:00").toLocaleDateString("en",{weekday:"long",month:"long",day:"numeric"});
+  $("#sub").textContent=!day.length?"Nothing planned yet. Add your first task below.":next?"Next up at "+next.time+": "+next.title:"Everything is done for this day. Nice work!";
+  $("#tiles").innerHTML=`<div><b>${done}/${day.length}</b><span>Done</span></div><div><b>${day.length-done}</b><span>Left</span></div><div><b>${S.focus[sel]||0}</b><span>Focus min</span></div>`;
+  $("#arc").style.strokeDashoffset=163.4*(1-pct/100);$("#pct").textContent=pct+"%";
+
+  /* الأسبوع بيبدأ السبت وينتهي الجمعة */
+  const sd=new Date(sel+"T12:00"),ws=new Date(sd.getTime()-((sd.getDay()+1)%7)*864e5),we=new Date(ws.getTime()+6*864e5);
+  let sh="";
+  for(let i=0;i<7;i++){
+    const d=new Date(ws.getTime()+i*864e5),k=ymd(d),all=S.tasks.filter(t=>t.date===k),n=all.length,dn=all.filter(t=>t.done).length;
+    sh+=`<button data-act="day" data-d="${k}" class="${k===sel?"on":""}${k===td?" tdy":""}"><small>${d.toLocaleDateString("en",{weekday:"short"})}</small><b>${d.getDate()}</b><i>${n?dn+"/"+n:""}</i></button>`;
+  }
+  const fm=(d,y)=>d.toLocaleDateString("en",y?{month:"short",day:"numeric",year:"numeric"}:{month:"short",day:"numeric"});
+  $("#wkLbl").textContent=fm(ws)+" – "+fm(we,1);
+  $("#strip").innerHTML=sh;
+
+  $("#bands").innerHTML=BANDS.map((b,i)=>{
+    const items=day.filter(t=>bandOf(+t.time.slice(0,2))===i),cur=isToday&&bandOf(h)===i;
+    return `<section class="band${cur?" now":""}"><h3>${b.n}<small>${b.r}</small>${cur?"<em>Now</em>":""}</h3>`+
+      (items.length?`<ul>${items.map(t=>taskHtml(t,(isToday&&!t.done&&t.time<nowT)||(sel<td&&!t.done))).join("")}</ul>`
+                   :`<p class="empty">Nothing planned for the ${b.n.toLowerCase()}. <button class="link" data-act="fill" data-t="${["09:00","14:00","19:00"][i]}">Add one</button></p>`)+`</section>`;
+  }).join("");
+
+  $("#tags").innerHTML=[...new Set(["Study","Assignment","Exam prep","Project",...S.tasks.map(t=>t.tag).filter(Boolean)])].map(x=>`<option value="${esc(x)}">`).join("");
+}
+
+/* Theme: يتبع إعدادات الجهاز إلا لو اخترت بنفسك */
+const curTheme=()=>S.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+function applyTheme(){const r=document.documentElement;if(S.theme)r.dataset.theme=S.theme;else delete r.dataset.theme;$("#themeBtn").textContent=curTheme()==="dark"?"Light mode":"Dark mode"}
+
+/* Focus timer (Pomodoro 25 min) */
+function renderFocus(){
+  const b=$("#fbar");
+  if(!F){b.hidden=true;document.title=TITLE;return}
+  const l=Math.round(remain()/1000),m=pad(Math.floor(l/60))+":"+pad(l%60);
+  b.hidden=false;$("#ftitle").textContent=(F.paused?"Paused: ":"Focusing: ")+F.title;$("#fclock").textContent=m;$("#fpause").textContent=F.paused?"Resume":"Pause";document.title=m+(F.paused?" · Paused":" · Focus");
+}
+const remain=()=>F.paused?F.left:Math.max(0,F.end-Date.now());
+function togglePause(){
+  if(!F)return;
+  if(F.paused){F.end=Date.now()+F.left;F.paused=false}
+  else{F.left=remain();F.paused=true}
+  renderFocus();
+}
+function startFocus(t){
+  if(F)stopFocus(false);
+  const dur=t.dur||25;F={title:t.title,dur:dur,paused:false,left:dur*60000,end:Date.now()+dur*60000};
+  F.iv=setInterval(()=>!F.paused&&Date.now()>=F.end?stopFocus(true):renderFocus(),1000);renderFocus();
+}
+function stopFocus(ok){
+  if(!F)return;
+  const mins=ok?F.dur:Math.floor((F.dur*60000-remain())/60000),k=todayStr();
+  S.focus[k]=(S.focus[k]||0)+mins;clearInterval(F.iv);F=null;save();render();renderFocus();
+  toast(ok?"Focus session complete: +"+mins+" min":"Focus stopped: +"+mins+" min");
+}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2200)}
+
+/* Events */
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,id=b.dataset.id,t=S.tasks.find(x=>x.id===id);popId=null;
+  if(a==="day")sel=b.dataset.d;
+  else if(a==="wk")sel=ymd(new Date(new Date(sel+"T12:00").getTime()+(+b.dataset.n)*7*864e5));
+  else if(a==="today")sel=todayStr();
+  else if(a==="theme")S.theme=curTheme()==="dark"?"light":"dark";
+  else if(a==="fill"){$("#time").value=lastTime=b.dataset.t;$("#title").focus();return}
+  else if(a==="dur"&&t){const n=parseInt(prompt("Focus time in minutes (1-240)?",t.dur||25),10);if(n>0)t.dur=Math.min(240,n)}
+  else if(a==="done"&&t){t.done=!t.done;if(t.done){popId=id;toast("Nice! Task done")}}
+  else if(a==="del")S.tasks=S.tasks.filter(x=>x.id!==id);
+  else if(a==="focus"&&t){startFocus(t);return}
+  else if(a==="pause"){togglePause();return}
+  else if(a==="stop"){stopFocus(false);return}
+  else if(a==="name"){const n=prompt("Your name?",S.name);if(n&&n.trim())S.name=n.trim().slice(0,30)}
+  save();render();
+});
+$("#form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const title=$("#title").value.trim();if(!title)return;
+  lastTime=$("#time").value||lastTime;
+  S.tasks.push({id:uid(),date:sel,time:lastTime,title:title,tag:$("#tag").value.trim(),dur:Math.min(240,Math.max(1,parseInt($("#dur").value,10)||25)),done:false});
+  $("#title").value="";save();render();
+  toast("Added to "+BANDS[bandOf(+lastTime.slice(0,2))].n.toLowerCase());$("#title").focus();
+});
+$("#time").value=lastTime;
+render();setInterval(render,60000);
+</script>
+</body>
+</html>
